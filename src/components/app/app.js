@@ -1,129 +1,128 @@
-import React, { Component } from "react";
+/* eslint-disable no-unused-vars */
+import React, { Component } from 'react';
 
-import Footer from "../footer";
-import NewTaskForm from "../new-task-form";
-import TaskList from "../task-list";
+import Footer from '../footer';
+import NewTaskForm from '../new-task-form';
+import TaskList from '../task-list';
 
-import "./app.css";
+import './app.css';
 
 export default class App extends Component {
-  maxId = 100;
+  constructor() {
+    super();
 
-  state = {
-    todoData: [
-      this.createTask("Drink Coffee"),
-      this.createTask("Make Awesome App"),
-      this.createTask("Have a lunch"),
-    ],
-    filter: "All",
-  };
+    const maxId = 100;
 
-  createTask(label) {
-    return { label, id: this.maxId++, date: new Date() };
-  }
+    const state = {
+      todoData: [this.createTask('Drink Coffee'), this.createTask('Make Awesome App'), this.createTask('Have a lunch')],
+      filter: 'All',
+    };
 
-  deleteTask = (id) => {
-    this.setState(({ todoData }) => {
-      const idx = todoData.findIndex((el) => el.id === id);
-
-      //Нельзя изменять входящий массив
-      // const before = todoData.slice(0, idx);
-      // const after = todoData.slice(idx + 1);
-      // const newArray = [...before, ...after];
-      //Проще деструктуризацией копию сделать
-      let newArray = [...todoData];
-
-      newArray.splice(idx, 1);
-
-      return {
-        todoData: newArray,
-      };
-    });
-  };
-
-  addTask = (text) => {
-    const newTask = this.createTask(text);
-
-    this.setState(({ todoData }) => {
-      const newArr = [...todoData, newTask];
-
-      return {
-        todoData: newArr,
-      };
-    });
-  };
-
-  toggleProperty(arr, id, className) {
-    const idx = arr.findIndex((el) => el.id === id);
-
-    const oldTask = arr[idx];
-
-    let newItem = { ...oldTask };
-
-    let newArray = [...arr];
-
-    if (newItem.specialStatus === null || newItem.specialStatus === undefined) {
-      newItem.specialStatus = className;
-    } else if (className !== "editing") {
-      newItem.specialStatus = null;
+    function createTask(label) {
+      return { label, id: this.maxId++, date: new Date() };
     }
 
-    newArray.splice(idx, 1, newItem);
+    const deleteTask = (id) => {
+      this.setState(({ todoData }) => {
+        const idx = todoData.findIndex((el) => el.id === id);
 
-    return newArray;
-  }
+        //Нельзя изменять входящий массив
+        // const before = todoData.slice(0, idx);
+        // const after = todoData.slice(idx + 1);
+        // const newArray = [...before, ...after];
+        //Проще деструктуризацией копию сделать
+        let newArray = [...todoData];
 
-  onToggleCompleted = (id) => {
-    this.setState(({ todoData }) => {
-      return {
-        todoData: this.toggleProperty(todoData, id, "completed"),
-      };
-    });
-  };
+        newArray.splice(idx, 1);
 
-  onToggleEditing = (id) => {
-    this.setState(({ todoData }) => {
-      return {
-        todoData: this.toggleProperty(todoData, id, "editing"),
-      };
-    });
-  };
-
-  select = (event) => {
-    this.setState({ filter: event.target.name });
-  };
-
-  filterTodoData = (todoData) => {
-    let newTodoData = [...todoData];
-
-    if (this.state.filter !== "All") {
-      newTodoData = newTodoData.filter((element) => {
-        if (this.state.filter === "Active") {
-          return element.specialStatus !== "completed";
-        } else {
-          return element.specialStatus === "completed";
-        }
+        return {
+          todoData: newArray,
+        };
       });
+    };
+
+    const addTask = (text) => {
+      const newTask = this.createTask(text);
+
+      this.setState(({ todoData }) => {
+        const newArr = [...todoData, newTask];
+
+        return {
+          todoData: newArr,
+        };
+      });
+    };
+
+    function toggleProperty(arr, id, className) {
+      const idx = arr.findIndex((el) => el.id === id);
+
+      const oldTask = arr[idx];
+
+      let newItem = { ...oldTask };
+
+      let newArray = [...arr];
+
+      if (newItem.specialStatus === null || newItem.specialStatus === undefined) {
+        newItem.specialStatus = className;
+      } else if (className !== 'editing') {
+        newItem.specialStatus = null;
+      }
+
+      newArray.splice(idx, 1, newItem);
+
+      return newArray;
     }
 
-    return newTodoData;
-  };
+    const onToggleCompleted = (id) => {
+      this.setState(({ todoData }) => {
+        return {
+          todoData: this.toggleProperty(todoData, id, 'completed'),
+        };
+      });
+    };
 
-  onDeletedCompleted = (todoData) => {
-    let newTodoData = [...todoData];
+    const onToggleEditing = (id) => {
+      this.setState(({ todoData }) => {
+        return {
+          todoData: this.toggleProperty(todoData, id, 'editing'),
+        };
+      });
+    };
 
-    newTodoData = newTodoData.filter((element) => {
-      return element.specialStatus !== "completed";
-    });
+    const select = (event) => {
+      this.setState({ filter: event.target.name });
+    };
 
-    this.setState({ todoData: newTodoData });
-  };
+    const filterTodoData = (todoData) => {
+      let newTodoData = [...todoData];
+
+      if (this.state.filter !== 'All') {
+        newTodoData = newTodoData.filter((element) => {
+          if (this.state.filter === 'Active') {
+            return element.specialStatus !== 'completed';
+          } else {
+            return element.specialStatus === 'completed';
+          }
+        });
+      }
+
+      return newTodoData;
+    };
+
+    const onDeletedCompleted = (todoData) => {
+      let newTodoData = [...todoData];
+
+      newTodoData = newTodoData.filter((element) => {
+        return element.specialStatus !== 'completed';
+      });
+
+      this.setState({ todoData: newTodoData });
+    };
+  }
 
   render() {
     const { todoData } = this.state;
-    const doneCount = todoData.filter(
-      (el) => el.specialStatus === "completed"
-    ).length;
+    const doneCount = todoData.filter((el) => el.specialStatus === 'completed').length;
     const todoCount = todoData.length - doneCount;
 
     return (

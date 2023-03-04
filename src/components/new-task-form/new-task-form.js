@@ -1,25 +1,30 @@
-import React, { Component } from "react";
+/* eslint-disable no-unused-vars */
+import React, { Component } from 'react';
 
-import "./new-task-form.css";
+import './new-task-form.css';
 
 export default class NewTaskForm extends Component {
-  state = {
-    label: "",
-  };
+  constructor() {
+    super();
 
-  onLabelChange = (e) => {
-    //Значение не зависит от предыдущего значения, можно писать синхронный
-    //код и передать просто объект, а не функцию
-    this.setState({
-      label: e.target.value,
-    });
-  };
+    const state = {
+      label: '',
+    };
 
-  onSubmit = (e) => {
-    e.preventDefault();
-    this.props.onTaskAdded(this.state.label);
-    this.setState({ label: "" });
-  };
+    const onLabelChange = (e) => {
+      //Значение не зависит от предыдущего значения, можно писать синхронный
+      //код и передать просто объект, а не функцию
+      this.setState({
+        label: e.target.value,
+      });
+    };
+
+    const onSubmit = (e) => {
+      e.preventDefault();
+      this.props.onTaskAdded(this.state.label);
+      this.setState({ label: '' });
+    };
+  }
 
   render() {
     return (
@@ -28,7 +33,7 @@ export default class NewTaskForm extends Component {
         placeholder="What needs to be done?"
         autoFocus
         onKeyDown={(event) => {
-          if (event.code === "Enter") {
+          if (event.code === 'Enter') {
             this.onSubmit(event);
           }
         }}
